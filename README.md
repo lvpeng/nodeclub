@@ -1,4 +1,4 @@
-Nodeclub
+SDIter
 =
 
 [![build status][travis-image]][travis-url]
