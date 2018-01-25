@@ -115,6 +115,7 @@ exports.login = function (req, res, next) {
 
   if (!loginname || !pass) {
     res.status(422);
+    // FIXME: just render `message block`
     return res.render('sign/signin', { error: '信息不完整。' });
   }
 

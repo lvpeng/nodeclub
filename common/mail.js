@@ -1,39 +1,24 @@
 var mailer        = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
 var config        = require('../config');
 var util          = require('util');
 var logger = require('./logger');
-var transporter     = mailer.createTransport(smtpTransport(config.mail_opts));
-var SITE_ROOT_URL = 'http://' + config.host;
-var async = require('async')
+var transporter     = mailer.createTransport(config.mail_opts);
+var SITE_ROOT_URL = 'http://' + config.host + ":" + config.port;
 
 /**
  * Send an email
  * @param {Object} data 邮件对象
  */
-var sendMail = function (data) {
-  if (config.debug) {
-    return;
-  }
-
-  // 重试5次
-  async.retry({times: 5}, function (done) {
-    transporter.sendMail(data, function (err) {
-      if (err) {
-        // 写为日志
-        logger.error('send mail error', err, data);
-        return done(err);
-      }
-      return done()
-    });
-  }, function (err) {
-    if (err) {
-      return logger.error('send mail finally error', err, data);
+exports.sendMail = function(data){
+  transporter.sendMail(data, (error, info) => {
+    if (error) {
+        console.log('send mail error:' + error.message);
+        logger.error('send mail error', error, data);
+        return;
     }
-    logger.info('send mail success', data)
-  })
+    logger.info('send mail success')
+  });
 };
-exports.sendMail = sendMail;
 
 /**
  * 发送激活通知邮件
@@ -42,7 +27,7 @@ exports.sendMail = sendMail;
  * @param {String} name 接收人的用户名
  */
 exports.sendActiveMail = function (who, token, name) {
-  var from    = util.format('%s <%s>', config.name, config.mail_opts.auth.user);
+  var from    = util.format('%s<%s>', config.name, config.mail_opts.auth.user);
   var to      = who;
   var subject = config.name + '社区帐号激活';
   var html    = '<p>您好：' + name + '</p>' +
@@ -66,7 +51,7 @@ exports.sendActiveMail = function (who, token, name) {
  * @param {String} name 接收人的用户名
  */
 exports.sendResetPassMail = function (who, token, name) {
-  var from = util.format('%s <%s>', config.name, config.mail_opts.auth.user);
+  var from = util.format('%s<%s>', config.name, config.mail_opts.auth.user);
   var to = who;
   var subject = config.name + '社区密码重置';
   var html = '<p>您好：' + name + '</p>' +

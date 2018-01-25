@@ -90,8 +90,6 @@
             </a>
         </li>
         <% } %>
-        <li><a href='/getstart'>新手入门</a></li>
-        <li><a href='/api'>API</a></li>
         <%
         var site_navs = config.site_navs || [];
         for (var i = 0, l = site_navs.length; i < l; i++) {
@@ -123,14 +121,9 @@
 <div id='backtotop'>回到顶部</div>
 <div id='footer'>
   <div id='footer_main'>
-    <div class="links">
-      <a class='dark' href='/rss'>RSS</a>
-      |
-      <a class='dark' href='https://github.com/cnodejs/nodeclub/'>源码地址</a>
+    <div class='col_fade'>
+      SDIter 致力于做有深度有温度的技术社区，提供技术、生活交流和分享的平台，加速山东软件的发展.
     </div>
-
-    <%- partial('./_sponsors') %>
-
   </div>
 </div>
 <div id="sidebar-mask"></div>
